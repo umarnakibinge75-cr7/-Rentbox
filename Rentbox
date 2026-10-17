@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rentbox - Find Rentals in Uganda</title>
+<style>
+body{font-family:Arial;background:#f5f5f5;padding:20px}
+.card{background:white;padding:15px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 5px #0001}
+button{background:#000;color:white;padding:10px 20px;border-radius:8px;border:0;width:100%}
+h1{color:#111}
+</style>
+</head>
+<body>
+<h1>Rentbox 🇺🇬</h1>
+<p>Find rentals in Kampala - by Nakibinge Umar, 14yrs</p>
+<div class="card">
+<h3>1 Bedroom in Bwaise - 300k</h3>
+<p>Water + Electricity included</p>
+<button onclick="window.open('https://wa.me/256700000000?text=Hi, I want Bwaise house')">Chat Landlord on WhatsApp</button>
+</div>
+<div class="card">
+<h3>Shop in Kikuubo - 500k</h3>
+<p>For business - Near main market</p>
+<button onclick="window.open('https://wa.me/256700000000?text=Hi, I want Kikuubo shop')">Chat Landlord</button>
+</div>
+<p style="text-align:center;margin-top:30px">© Rentbox - Built by Nakibinge Umar</p>
+</body>
+</html>
