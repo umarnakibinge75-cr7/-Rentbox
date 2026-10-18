@@ -2,27 +2,64 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rentbox - Find Rentals in Uganda</title>
+<title>Rentbox Uganda</title>
 <style>
-body{font-family:Arial;background:#f5f5f5;padding:20px}
-.card{background:white;padding:15px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 5px #0001}
-button{background:#000;color:white;padding:10px 20px;border-radius:8px;border:0;width:100%}
-h1{color:#111}
+body{font-family:Arial;background:#f5f5f5;padding:15px;margin:0}
+.header{background:#000;color:#fff;padding:15px;border-radius:12px;text-align:center;margin-bottom:15px}
+.card{background:white;padding:15px;border-radius:12px;margin-bottom:12px;box-shadow:0 2px 5px #0001}
+button{padding:10px 15px;border-radius:8px;border:0;cursor:pointer;font-weight:bold}
+.btn-black{background:#000;color:#fff;width:100%}
+.btn-add{background:#25D366;color:#fff;width:100%;margin-bottom:15px;padding:15px;font-size:16px}
+input,select,textarea{width:100%;padding:10px;margin:5px 0 10px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box}
+#formBox{display:none;background:white;padding:15px;border-radius:12px;margin-bottom:15px}
 </style>
 </head>
 <body>
-<h1>Rentbox 🇺🇬</h1>
-<p>Find rentals in Kampala - by Nakibinge Umar, 14yrs</p>
-<div class="card">
-<h3>1 Bedroom in Bwaise - 300k</h3>
-<p>Water + Electricity included</p>
-<button onclick="window.open('https://wa.me/256700000000?text=Hi, I want Bwaise house')">Chat Landlord on WhatsApp</button>
+<div class="header">
+<h2>Rentbox 🇺🇬</h2>
+<p>Find Rentals in Uganda</p>
 </div>
-<div class="card">
-<h3>Shop in Kikuubo - 500k</h3>
-<p>For business - Near main market</p>
-<button onclick="window.open('https://wa.me/256700000000?text=Hi, I want Kikuubo shop')">Chat Landlord</button>
+<button class="btn-add" onclick="toggleForm()">+ ADD NEW PROPERTY / TENANT</button>
+<div id="formBox">
+<h3>Add New</h3>
+<input id="title" placeholder="Title e.g. 2 Bedroom in Ntinda">
+<input id="price" placeholder="Price e.g. 400k per month">
+<select id="type"><option>House</option><option>Shop</option><option>Apartment</option><option>Room</option></select>
+<input id="location" placeholder="Location e.g. Bwaise, Kampala">
+<input id="phone" placeholder="Landlord WhatsApp e.g. 256700000000">
+<textarea id="desc" placeholder="Description"></textarea>
+<button class="btn-black" onclick="addProperty()">Save Property</button>
+<button style="background:#ccc;width:100%;margin-top:5px" onclick="toggleForm()">Cancel</button>
 </div>
-<p style="text-align:center;margin-top:30px">© Rentbox - Built by Nakibinge Umar</p>
+<div id="list"></div>
+<script>
+let props = http://JSON.parse(localStorage.getItem('rentbox') || '[{"title":"1 Bedroom in Bwaise - 300k","price":"300k","type":"House","location":"Bwaise","phone":"256700000000","desc":"Water + Electricity included"}]');
+function render(){
+let html='';
+http://props.forEach(p=>{
+html+=`<div class="card"><h3>${p.title}</h3><p><b>${p.price}</b> | ${p.type} | ${p.location}</p><p>${p.desc}</p><button class="btn-black" onclick="window.open('https://wa.me/${p.phone}?text=Hi, I want ${p.title}')">Chat on WhatsApp</button></div>`;
+});
+http://document.getElementById('list').innerHTML=html;
+}
+function toggleForm(){
+let f=document.getElementById('formBox');
+http://f.style.display=f.style.display=='none' || http://f.style.display=='' ? 'block':'none';
+}
+function addProperty(){
+let t=document.getElementById('title').value;
+let p=document.getElementById('price').value;
+let ty=document.getElementById('type').value;
+let l=document.getElementById('location').value;
+let ph=document.getElementById('phone').value;
+let d=document.getElementById('desc').value;
+if(!t || !p){alert('Add title and price');return;}
+http://props.unshift({title:t,price:p,type:ty,location:l,phone:ph,desc:d});
+http://localStorage.setItem('rentbox',JSON.stringify(props));
+render();
+toggleForm();
+http://document.getElementById('title').value='';document.getElementById('price').value='';document.getElementById('desc').value='';
+}
+render();
+</script>
 </body>
 </html>
