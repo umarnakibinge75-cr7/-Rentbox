@@ -2,62 +2,75 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rentbox Uganda</title>
+<title>Rentbox - Landlord Manager</title>
 <style>
-body{font-family:Arial;background:#f5f5f5;padding:15px;margin:0}
-.header{background:#000;color:#fff;padding:15px;border-radius:12px;text-align:center;margin-bottom:15px}
-.card{background:white;padding:15px;border-radius:12px;margin-bottom:12px;box-shadow:0 2px 5px #0001}
-button{padding:10px 15px;border-radius:8px;border:0;cursor:pointer;font-weight:bold}
-.btn-black{background:#000;color:#fff;width:100%}
-.btn-add{background:#25D366;color:#fff;width:100%;margin-bottom:15px;padding:15px;font-size:16px}
-input,select,textarea{width:100%;padding:10px;margin:5px 0 10px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box}
-#formBox{display:none;background:white;padding:15px;border-radius:12px;margin-bottom:15px}
+body{font-family:Arial;background:#f1f5f9;padding:12px;margin:0}
+.header{background:#000;color:#fff;padding:16px;border-radius:14px;text-align:center}
+.stats{display:flex;gap:8px;margin:12px 0}
+.stat{background:white;flex:1;padding:12px;border-radius:12px;text-align:center;box-shadow:0 2px 4px #0001}
+.stat b{font-size:20px;display:block}
+.card{background:white;padding:14px;border-radius:12px;margin-bottom:10px;box-shadow:0 2px 5px #0001;display:flex;justify-content:space-between;align-items:center}
+.paid{border-left:5px solid #25D366}
+.unpaid{border-left:5px solid #ff3b30}
+button{padding:8px 12px;border-radius:8px;border:0;font-weight:bold;cursor:pointer}
+.btn-add{background:#000;color:#fff;width:100%;padding:14px;margin:12px 0;font-size:16px;border-radius:12px}
+.btn-paid{background:#25D366;color:#fff}
+.btn-unpaid{background:#ff3b30;color:#fff}
+input,select{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box}
+#form{display:none;background:white;padding:14px;border-radius:12px;margin-bottom:12px}
 </style>
 </head>
 <body>
-<div class="header">
-<h2>Rentbox 🇺🇬</h2>
-<p>Find Rentals in Uganda</p>
+<div class="header"><h2>Rentbox 🇺🇬</h2><p>Landlord Manager</p></div>
+<div class="stats">
+<div class="stat"><b id="total">0</b>Tenants</div>
+<div class="stat"><b id="collected">0 UGX</b>Collected</div>
+<div class="stat"><b id="pending">0 UGX</b>Pending</div>
 </div>
-<button class="btn-add" onclick="toggleForm()">+ ADD NEW PROPERTY / TENANT</button>
-<div id="formBox">
-<h3>Add New</h3>
-<input id="title" placeholder="Title e.g. 2 Bedroom in Ntinda">
-<input id="price" placeholder="Price e.g. 400k per month">
-<select id="type"><option>House</option><option>Shop</option><option>Apartment</option><option>Room</option></select>
-<input id="location" placeholder="Location e.g. Bwaise, Kampala">
-<input id="phone" placeholder="Landlord WhatsApp e.g. 256700000000">
-<textarea id="desc" placeholder="Description"></textarea>
-<button class="btn-black" onclick="addProperty()">Save Property</button>
-<button style="background:#ccc;width:100%;margin-top:5px" onclick="toggleForm()">Cancel</button>
+<button class="btn-add" onclick="toggle()">+ ADD TENANT</button>
+<div id="form">
+<input id="name" placeholder="Tenant Name">
+<input id="room" placeholder="Room / House No">
+<input id="rent" type="number" placeholder="Rent Amount">
+<input id="phone" placeholder="Phone 256...">
+<select id="status"><option value="unpaid">Not Paid</option><option value="paid">Paid</option></select>
+<button class="btn-add" onclick="addTenant()">Save Tenant</button>
+<button style="background:#ddd;width:100%;padding:10px;border-radius:8px" onclick="toggle()">Cancel</button>
 </div>
 <div id="list"></div>
 <script>
-let props = http://JSON.parse(localStorage.getItem('rentbox') || '[{"title":"1 Bedroom in Bwaise - 300k","price":"300k","type":"House","location":"Bwaise","phone":"256700000000","desc":"Water + Electricity included"}]');
-function render(){
-let html='';
-http://props.forEach(p=>{
-html+=`<div class="card"><h3>${p.title}</h3><p><b>${p.price}</b> | ${p.type} | ${p.location}</p><p>${p.desc}</p><button class="btn-black" onclick="window.open('https://wa.me/${p.phone}?text=Hi, I want ${p.title}')">Chat on WhatsApp</button></div>`;
-});
-http://document.getElementById('list').innerHTML=html;
-}
-function toggleForm(){
-let f=document.getElementById('formBox');
-http://f.style.display=f.style.display=='none' || http://f.style.display=='' ? 'block':'none';
-}
-function addProperty(){
-let t=document.getElementById('title').value;
-let p=document.getElementById('price').value;
-let ty=document.getElementById('type').value;
-let l=document.getElementById('location').value;
+let tenants = http://JSON.parse(localStorage.getItem('rentbox_landlord') || '[]');
+function toggle(){let f=document.getElementById('form');f.style.display=f.style.display=='none'||f.style.display==''?'block':'none';}
+function addTenant(){
+let n=document.getElementById('name').value;
+let r=document.getElementById('room').value;
+let rent=Number(document.getElementById('rent').value);
 let ph=document.getElementById('phone').value;
-let d=document.getElementById('desc').value;
-if(!t || !p){alert('Add title and price');return;}
-http://props.unshift({title:t,price:p,type:ty,location:l,phone:ph,desc:d});
-http://localStorage.setItem('rentbox',JSON.stringify(props));
-render();
-toggleForm();
-http://document.getElementById('title').value='';document.getElementById('price').value='';document.getElementById('desc').value='';
+let s=document.getElementById('status').value;
+if(!n||!rent){alert('Name and Rent needed');return;}
+http://tenants.unshift({id:Date.now(),name:n,room:r,rent:rent,phone:ph,status:s});
+http://localStorage.setItem('rentbox_landlord',JSON.stringify(tenants));
+http://document.getElementById('name').value='';document.getElementById('rent').value='';
+toggle();render();
+}
+function togglePaid(id){
+let t=tenants.find(x=>x.id==id);
+http://t.status=t.status=='paid'?'unpaid':'paid';
+http://localStorage.setItem('rentbox_landlord',JSON.stringify(tenants));render();
+}
+function del(id){
+if(confirm('Delete?')){tenants=tenants.filter(x=>x.id!=id);localStorage.setItem('rentbox_landlord',JSON.stringify(tenants));render();}
+}
+function render(){
+let html='';let tot=tenants.length;let coll=0;let pend=0;
+http://tenants.forEach(t=>{
+if(t.status=='paid')coll+=t.rent;else pend+=t.rent;
+html+=`<div class="card ${t.status}"><div><b>${t.name}</b><br><small>${t.room} - ${t.rent.toLocaleString()} UGX - ${t.status.toUpperCase()}</small></div><div><button class="${t.status=='paid'?'btn-paid':'btn-unpaid'}" onclick="togglePaid(${t.id})">${t.status=='paid'?'PAID':'UNPAID'}</button> <button onclick="window.open('https://wa.me/${t.phone}?text=Hi ${t.name}, rent ${t.rent} UGX for ${t.room} pending - Rentbox')" style="background:#000;color:#fff">WA</button> <button onclick="del(${t.id})" style="background:#eee">X</button></div></div>`;
+});
+http://document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#888">No tenants yet</p>';
+http://document.getElementById('total').innerText=tot;
+http://document.getElementById('collected').innerText=coll.toLocaleString();
+http://document.getElementById('pending').innerText=pend.toLocaleString();
 }
 render();
 </script>
